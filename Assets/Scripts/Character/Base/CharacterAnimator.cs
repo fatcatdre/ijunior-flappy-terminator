@@ -6,10 +6,8 @@ public class CharacterAnimator : MonoBehaviour
     [SerializeField] protected InputSource _input;
 
     protected Animator _animator;
-
     protected int _isShooting = Animator.StringToHash("isShooting");
     protected int _isDead = Animator.StringToHash("isDead");
-
     protected bool _isCharacterDead;
 
     protected virtual void Awake()

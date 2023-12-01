@@ -11,12 +11,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int _spawnsBeforeReuse;
     [SerializeField] private float _timeBetweenSpawns;
 
-    public UnityAction<int> EnemyDied;
-
     private List<SpawnPoint> _spawnPoints;
     private Queue<SpawnPoint> _recentlyUsedSpawnPoints;
+    private WaitForSeconds _spawnDelay;
 
-    private float _elapsedTime;
+    public event UnityAction<int> EnemyDied;
 
     private void Awake()
     {
@@ -26,23 +25,23 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        UpdateSpawnDelay();
         StartCoroutine(Spawn());
+    }
+
+    private void OnValidate()
+    {
+        UpdateSpawnDelay();
     }
 
     private IEnumerator Spawn()
     {
         while (enabled)
         {
-            while (_elapsedTime < _timeBetweenSpawns)
-            {
-                _elapsedTime += Time.deltaTime;
-                yield return null;
-            }
+            yield return _spawnDelay;
 
             PrepareEnemy(_enemyPool.Get() as Enemy);
             RefreshSpawnPoints();
-
-            _elapsedTime = 0f;
         }
     }
 
@@ -70,6 +69,11 @@ public class EnemySpawner : MonoBehaviour
     {
         _spawnPoints.Remove(spawnPoint);
         _recentlyUsedSpawnPoints.Enqueue(spawnPoint);
+    }
+
+    private void UpdateSpawnDelay()
+    {
+        _spawnDelay = new WaitForSeconds(_timeBetweenSpawns);
     }
 
     private void OnEnemyDied(Enemy enemy)

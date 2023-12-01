@@ -6,12 +6,11 @@ public class Player : Character, IDamageable
 {
     [SerializeField] private float _tapForce = 250f;
 
-    public UnityAction Died;
-
     private Vector2 _startingPosition;
     private Quaternion _startingRotation;
-
     private bool _isRespawning;
+
+    public event UnityAction Died;
 
     protected override void Awake()
     {

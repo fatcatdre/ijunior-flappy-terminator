@@ -7,10 +7,9 @@ public abstract class Character : PooledObject
     [SerializeField] protected InputSource _input;
     [SerializeField] protected CharacterAnimator _animator;
 
-    protected bool _isDead;
-
     protected Weapon _weapon;
     protected Rigidbody2D _rigidbody;
+    protected bool _isDead;
 
     protected virtual void Awake()
     {

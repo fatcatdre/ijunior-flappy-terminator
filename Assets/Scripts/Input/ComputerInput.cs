@@ -7,8 +7,16 @@ public class ComputerInput : InputSource
     [SerializeField] private float _delaySpread;
 
     private bool _isShootButtonPressed;
+    private WaitForSecondsRandom _randomDelay;
 
     public override bool IsShooting => _isShootButtonPressed;
+
+    private void Awake()
+    {
+        _randomDelay = new WaitForSecondsRandom(
+            _delayBetweenPresses - _delaySpread,
+            _delayBetweenPresses + _delaySpread);
+    }
 
     private void OnEnable()
     {
@@ -17,23 +25,15 @@ public class ComputerInput : InputSource
 
     private IEnumerator Shoot()
     {
-        float elapsedTime = 0f;
-
         while (enabled)
         {
             _isShootButtonPressed = false;
 
-            float delay = _delayBetweenPresses += Random.Range(-_delaySpread, _delaySpread);
-
-            while (elapsedTime < delay)
-            {
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
+            yield return _randomDelay;
 
             _isShootButtonPressed = true;
 
-            elapsedTime = 0f;
+            _randomDelay.Reset();
 
             yield return null;
         }

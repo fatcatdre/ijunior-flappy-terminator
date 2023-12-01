@@ -10,11 +10,11 @@ public class Enemy : Character, IDamageable
     [SerializeField] private Vector2 _forceWhenHit;
     [SerializeField] private float _delayBeforeDespawn;
 
-    public UnityAction<Enemy> Died;
-
     private float _originalGravityScale;
 
     public int ScoreValue => _scoreValue;
+
+    public event UnityAction<Enemy> Died;
 
     protected override void Awake()
     {
